@@ -60,48 +60,59 @@ class TodoScreen extends StatelessWidget {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
                         final todos = snapshot.data ?? [];
-                        return ListView.builder(
-                          padding: EdgeInsets.only(top: 10.h),
-                          itemCount: todos.length,
-                          itemBuilder: (context, index) {
-                            final todo = todos[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.w, vertical: 5.h),
-                              child: ListTile(
-                                onTap: () {
-                                  context.nav.pushNamed(Routes.todoViewUpdate,
-                                      arguments: todo);
+                        return todos.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'No todo found!',
+                                  style: AppTextStyle(context).subTitle,
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsets.only(top: 10.h),
+                                itemCount: todos.length,
+                                itemBuilder: (context, index) {
+                                  final todo = todos[index];
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w, vertical: 5.h),
+                                    child: ListTile(
+                                      onTap: () {
+                                        context.nav.pushNamed(
+                                            Routes.todoViewUpdate,
+                                            arguments: todo);
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.r)),
+                                      tileColor: AppColor.offWhite,
+                                      title: Text(
+                                        todo.title,
+                                        style: AppTextStyle(context)
+                                            .subTitle
+                                            .copyWith(
+                                              decoration: todo.isCompleted
+                                                  ? TextDecoration.lineThrough
+                                                  : null,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                      ),
+                                      trailing: Checkbox(
+                                        value: todo.isCompleted,
+                                        onChanged: (value) {
+                                          ref
+                                              .read(todoControllerProvider
+                                                  .notifier)
+                                              .updateTodoStatus(
+                                                id: todo.id,
+                                                isCompleted: value ?? false,
+                                              );
+                                        },
+                                      ),
+                                      onLongPress: () {},
+                                    ),
+                                  );
                                 },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.r)),
-                                tileColor: AppColor.offWhite,
-                                title: Text(
-                                  todo.title,
-                                  style:
-                                      AppTextStyle(context).subTitle.copyWith(
-                                            decoration: todo.isCompleted
-                                                ? TextDecoration.lineThrough
-                                                : null,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                ),
-                                trailing: Checkbox(
-                                  value: todo.isCompleted,
-                                  onChanged: (value) {
-                                    ref
-                                        .read(todoControllerProvider.notifier)
-                                        .updateTodoStatus(
-                                          id: todo.id,
-                                          isCompleted: value ?? false,
-                                        );
-                                  },
-                                ),
-                                onLongPress: () {},
-                              ),
-                            );
-                          },
-                        );
+                              );
                       }
                     },
                   );

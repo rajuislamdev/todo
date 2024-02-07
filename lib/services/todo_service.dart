@@ -10,7 +10,7 @@ class TodoService {
 
   TodoService(this.ref);
 
-  Future<void> addTodo({
+  Future<bool> addTodo({
     required String? deviceId,
     required String title,
   }) async {
@@ -20,8 +20,10 @@ class TodoService {
         'title': title,
         'isCompleted': false,
       });
+      return true;
     } catch (error) {
       debugPrint(error.toString());
+      return false;
     }
   }
 

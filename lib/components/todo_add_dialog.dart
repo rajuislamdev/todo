@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,7 +82,8 @@ class TodoAddDialog extends StatelessWidget {
                               buttonText: 'Save',
                               onPressed: () async {
                                 if (formKey.currentState!.validate()) {
-                                  GlobalFunction.getDeviceId().then((value) {
+                                  GlobalFunction.getDeviceId()
+                                      .then((value) async {
                                     ref
                                         .read(todoControllerProvider.notifier)
                                         .addTodo(
@@ -91,6 +93,18 @@ class TodoAddDialog extends StatelessWidget {
                                         .then((value) {
                                       titleController.clear();
                                       context.nav.pop();
+                                    });
+
+                                    await (Connectivity().checkConnectivity())
+                                        .then((result) {
+                                      if (result == ConnectivityResult.none) {
+                                        ref
+                                            .read(
+                                                todoControllerProvider.notifier)
+                                            .state = false;
+                                        titleController.clear();
+                                        context.nav.pop();
+                                      }
                                     });
                                   });
                                 }

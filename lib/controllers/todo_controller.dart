@@ -11,11 +11,18 @@ class TodoController extends StateNotifier<bool> {
     required String? deviceId,
     required String title,
   }) async {
-    state = true;
-    await ref
-        .read(todoServiceProvider)
-        .addTodo(deviceId: deviceId, title: title);
-    state = false;
+    try {
+      state = true;
+      await ref
+          .read(todoServiceProvider)
+          .addTodo(deviceId: deviceId, title: title)
+          .then((value) {
+        state = false;
+      });
+    } catch (error) {
+      state = false;
+      debugPrint(error.toString());
+    }
   }
 
   Future<void> updateTodoStatus({
@@ -27,10 +34,8 @@ class TodoController extends StateNotifier<bool> {
             id: id,
             isCompleted: isCompleted,
           );
-      state = false;
     } catch (error) {
       debugPrint(error.toString());
-      state = false;
     }
   }
 
@@ -43,21 +48,16 @@ class TodoController extends StateNotifier<bool> {
             id: id,
             title: title,
           );
-      state = false;
     } catch (error) {
       debugPrint(error.toString());
-      state = false;
     }
   }
 
   Future<void> deleteTodo({required String id}) async {
     try {
-      state = true;
       await ref.read(todoServiceProvider).deleteTodo(id: id);
-      state = false;
     } catch (error) {
       debugPrint(error.toString());
-      state = false;
     }
   }
 
