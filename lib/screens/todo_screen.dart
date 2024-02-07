@@ -45,10 +45,10 @@ class TodoScreen extends StatelessWidget {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
                 final bool isOnline = snapshot.data ?? false;
-                print('Online status:$isOnline');
+
                 return StreamBuilder<List<Todo>>(
                   stream: ref
-                      .watch(todoControllerProvider)
+                      .watch(todoControllerProvider.notifier)
                       .getTodos(online: isOnline),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -64,13 +64,14 @@ class TodoScreen extends StatelessWidget {
                         itemCount: todos.length,
                         itemBuilder: (context, index) {
                           final todo = todos[index];
+                          print(todo.title);
                           return ListTile(
                             title: Text(todo.title),
                             trailing: Checkbox(
                               value: todo.isCompleted,
                               onChanged: (value) {
                                 ref
-                                    .read(todoControllerProvider)
+                                    .read(todoControllerProvider.notifier)
                                     .updateTodoStatus(
                                       todo.id,
                                       value ?? false,
@@ -78,11 +79,7 @@ class TodoScreen extends StatelessWidget {
                                     );
                               },
                             ),
-                            onLongPress: () {
-                              ref
-                                  .read(todoControllerProvider)
-                                  .deleteTodo(todo.id, online: isOnline);
-                            },
+                            onLongPress: () {},
                           );
                         },
                       );

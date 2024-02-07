@@ -61,14 +61,19 @@ class TodoAddDialog extends StatelessWidget {
                         fit: FlexFit.tight,
                         flex: 1,
                         child: Consumer(builder: (context, ref, _) {
-                          return CustomButton(
-                            buttonText: 'Save',
-                            onPressed: () {
-                              ref
-                                  .read(todoControllerProvider)
-                                  .addTodo(titleController.text, isOnline);
-                            },
-                          );
+                          return ref.watch(todoControllerProvider)
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : CustomButton(
+                                  buttonText: 'Save',
+                                  onPressed: () {
+                                    ref
+                                        .read(todoControllerProvider.notifier)
+                                        .addTodo(
+                                            titleController.text, isOnline);
+                                  },
+                                );
                         }),
                       ),
                     ],

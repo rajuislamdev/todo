@@ -2,16 +2,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todos/models/todo.dart';
 import 'package:todos/services/todo_service.dart';
 
-class TodoController {
+class TodoController extends StateNotifier<bool> {
   final Ref ref;
-  TodoController(this.ref);
+  TodoController(this.ref) : super(false);
 
-  Future<void> addTodo(String title, {bool online = true}) async {
+  Future<void> addTodo(String title, bool online) async {
+    state = true;
     if (online) {
       await ref.read(todoServiceProvider).addTodoOnline(title);
+      state = false;
     } else {
       await ref.read(todoServiceProvider).addTodoOffline(title);
+      state = false;
     }
+    state = false;
   }
 
   Future<void> updateTodoStatus(String id, bool isCompleted,
