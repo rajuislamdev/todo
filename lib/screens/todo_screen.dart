@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todos/components/todo_add_dialog.dart';
 import 'package:todos/config/app_color.dart';
 import 'package:todos/config/app_text_style.dart';
 import 'package:todos/models/todo.dart';
 import 'package:todos/providers/todo_provider.dart';
-import 'package:todos/utils/global_function.dart';
+import 'package:todos/routes.dart';
+import 'package:todos/utils/context_less_navigation.dart';
 
 class TodoScreen extends StatelessWidget {
   const TodoScreen({super.key});
@@ -34,56 +36,54 @@ class TodoScreen extends StatelessWidget {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          return FutureBuilder<bool>(
-            future: GlobalFunction.isOnline(),
+          return StreamBuilder<List<Todo>>(
+            stream: ref.watch(todoControllerProvider.notifier).getTodos(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // Loading state while checking connectivity
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                // Error state
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
-                final bool isOnline = snapshot.data ?? false;
-
-                return StreamBuilder<List<Todo>>(
-                  stream: ref
-                      .watch(todoControllerProvider.notifier)
-                      .getTodos(online: isOnline),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      // Loading state
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      // Error state
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else {
-                      // Data loaded successfully
-                      final todos = snapshot.data ?? [];
-                      return ListView.builder(
-                        itemCount: todos.length,
-                        itemBuilder: (context, index) {
-                          final todo = todos[index];
-                          print(todo.title);
-                          return ListTile(
-                            title: Text(todo.title),
-                            trailing: Checkbox(
-                              value: todo.isCompleted,
-                              onChanged: (value) {
-                                ref
-                                    .read(todoControllerProvider.notifier)
-                                    .updateTodoStatus(
-                                      todo.id,
-                                      value ?? false,
-                                      online: isOnline,
-                                    );
-                              },
-                            ),
-                            onLongPress: () {},
-                          );
+                final todos = snapshot.data ?? [];
+                return ListView.builder(
+                  padding: EdgeInsets.only(top: 10.h),
+                  itemCount: todos.length,
+                  itemBuilder: (context, index) {
+                    final todo = todos[index];
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                      child: ListTile(
+                        onTap: () {
+                          context.nav.pushNamed(Routes.todoViewUpdate,
+                              arguments: todo);
                         },
-                      );
-                    }
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r)),
+                        tileColor: AppColor.offWhite,
+                        title: Text(
+                          todo.title,
+                          style: AppTextStyle(context).subTitle.copyWith(
+                                decoration: todo.isCompleted
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                        ),
+                        trailing: Checkbox(
+                          value: todo.isCompleted,
+                          onChanged: (value) {
+                            ref
+                                .read(todoControllerProvider.notifier)
+                                .updateTodoStatus(
+                                  id: todo.id,
+                                  isCompleted: value ?? false,
+                                );
+                          },
+                        ),
+                        onLongPress: () {},
+                      ),
+                    );
                   },
                 );
               }

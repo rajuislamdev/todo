@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todos/models/todo.dart';
 import 'package:todos/services/todo_service.dart';
@@ -6,42 +7,40 @@ class TodoController extends StateNotifier<bool> {
   final Ref ref;
   TodoController(this.ref) : super(false);
 
-  Future<void> addTodo(String title, bool online) async {
+  Future<void> addTodo({required String title}) async {
     state = true;
-    if (online) {
-      await ref.read(todoServiceProvider).addTodoOnline(title);
-      state = false;
-    } else {
-      await ref.read(todoServiceProvider).addTodoOffline(title);
-      state = false;
-    }
+    await ref.read(todoServiceProvider).addTodo(title: title);
     state = false;
   }
 
-  Future<void> updateTodoStatus(String id, bool isCompleted,
-      {bool online = true}) async {
-    if (online) {
-      await ref
-          .read(todoServiceProvider)
-          .updateTodoStatusOnline(id, isCompleted);
-    } else {
-      await ref
-          .read(todoServiceProvider)
-          .updateTodoStatusOffline(id, isCompleted);
+  Future<void> updateTodoStatus({
+    required String id,
+    required bool isCompleted,
+  }) async {
+    try {
+      await ref.read(todoServiceProvider).updateTodoStatus(
+            id: id,
+            isCompleted: isCompleted,
+          );
+      state = false;
+    } catch (error) {
+      debugPrint(error.toString());
+      state = false;
     }
   }
 
-  Future<void> deleteTodo(String id, {bool online = true}) async {
-    if (online) {
-      await ref.read(todoServiceProvider).deleteTodoOnline(id);
-    } else {
-      await ref.read(todoServiceProvider).deleteTodoOffline(id);
+  Future<void> deleteTodo(String id) async {
+    try {
+      state = true;
+      await ref.read(todoServiceProvider).deleteTodo(id);
+      state = false;
+    } catch (error) {
+      debugPrint(error.toString());
+      state = false;
     }
   }
 
   Stream<List<Todo>> getTodos({bool online = true}) {
-    return online
-        ? ref.read(todoServiceProvider).getTodosOnlineAndOffline()
-        : ref.read(todoServiceProvider).getTodosOffline();
+    return ref.read(todoServiceProvider).getTodos();
   }
 }

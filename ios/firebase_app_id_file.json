@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:480983733388:ios:940266cb0b93613cf297a9",
-  "FIREBASE_PROJECT_ID": "todo-app-demo-121",
-  "GCM_SENDER_ID": "480983733388"
+  "GOOGLE_APP_ID": "1:689130139620:ios:b27f56fc20974d8f35e1f1",
+  "FIREBASE_PROJECT_ID": "todo-dev-app-11",
+  "GCM_SENDER_ID": "689130139620"
 }

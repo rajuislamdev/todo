@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:todos/models/todo.dart';
 import 'package:todos/screens/onboarding_screen.dart';
 import 'package:todos/screens/splash_screen.dart';
 import 'package:todos/screens/todo_screen.dart';
@@ -30,7 +31,8 @@ Route generatedRoutes(RouteSettings settings) {
       child = const TodoScreen();
       break;
     case Routes.todoViewUpdate:
-      child = const TodoViewUpdateScreen();
+      final Todo todo = settings.arguments as Todo;
+      child = TodoViewUpdateScreen(todo: todo);
 
       break;
 

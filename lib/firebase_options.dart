@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD8-5VcmgXDDnR4SetndvOcd-pz7SAm_C4',
-    appId: '1:480983733388:android:7d0a177d1d440293f297a9',
-    messagingSenderId: '480983733388',
-    projectId: 'todo-app-demo-121',
-    storageBucket: 'todo-app-demo-121.appspot.com',
+    apiKey: 'AIzaSyDUNCHA53CxlEny946AqnUbADU65qTQVCI',
+    appId: '1:689130139620:android:7e91a782bc8fd59935e1f1',
+    messagingSenderId: '689130139620',
+    projectId: 'todo-dev-app-11',
+    storageBucket: 'todo-dev-app-11.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA7idML3igdxyzLeQKF-5oSLFSpt0Z6qog',
-    appId: '1:480983733388:ios:940266cb0b93613cf297a9',
-    messagingSenderId: '480983733388',
-    projectId: 'todo-app-demo-121',
-    storageBucket: 'todo-app-demo-121.appspot.com',
+    apiKey: 'AIzaSyCfGMdUrZIz23uPjjywxLNznA-jZ9hGgRU',
+    appId: '1:689130139620:ios:b27f56fc20974d8f35e1f1',
+    messagingSenderId: '689130139620',
+    projectId: 'todo-dev-app-11',
+    storageBucket: 'todo-dev-app-11.appspot.com',
     iosBundleId: 'com.example.todos',
   );
 }
