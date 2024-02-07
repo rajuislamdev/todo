@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
@@ -83,19 +84,19 @@ class TodoService {
     });
   }
 
-  // Stream<List<Todo>> getTodosOffline() {
-  //   return _localDatabase
-  //       .query('todos')
-  //       .then((value) => value.map((e) => Todo.fromMap(e)).toList());
-  // }
+  Stream<List<Todo>> getTodosOffline() {
+    return Stream.fromFuture(_localDatabase
+        .query('todos')
+        .then((value) => value.map((e) => Todo.fromMap(e)).toList()));
+  }
 
-  // Stream<List<Todo>> getTodosOnlineAndOffline() {
-  //   // Combine online and offline streams
-  //   return StreamGroup.merge<List<Todo>>([
-  //     getTodosOnline(),
-  //     getTodosOffline(),
-  //   ]);
-  // }
+  Stream<List<Todo>> getTodosOnlineAndOffline() {
+    // Combine online and offline streams
+    return StreamGroup.merge<List<Todo>>([
+      getTodosOnline(),
+      getTodosOffline(),
+    ]);
+  }
 }
 
 final todoServiceProvider = Provider((ref) => TodoService(ref));

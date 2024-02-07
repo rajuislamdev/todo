@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todos/models/todo.dart';
 import 'package:todos/services/todo_service.dart';
 
 class TodoController {
@@ -34,9 +35,9 @@ class TodoController {
     }
   }
 
-  // Stream<List<Todo>> getTodos({bool online = true}) {
-  //   return online
-  //       ? ref.read(todoServiceProvider).getTodosOnlineAndOffline()
-  //       : ref.read(todoServiceProvider).getTodosOffline();
-  // }
+  Stream<List<Todo>> getTodos({bool online = true}) {
+    return online
+        ? ref.read(todoServiceProvider).getTodosOnlineAndOffline()
+        : ref.read(todoServiceProvider).getTodosOffline();
+  }
 }
