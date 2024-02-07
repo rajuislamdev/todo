@@ -7,9 +7,14 @@ class TodoController extends StateNotifier<bool> {
   final Ref ref;
   TodoController(this.ref) : super(false);
 
-  Future<void> addTodo({required String title}) async {
+  Future<void> addTodo({
+    required String? deviceId,
+    required String title,
+  }) async {
     state = true;
-    await ref.read(todoServiceProvider).addTodo(title: title);
+    await ref
+        .read(todoServiceProvider)
+        .addTodo(deviceId: deviceId, title: title);
     state = false;
   }
 
@@ -29,10 +34,15 @@ class TodoController extends StateNotifier<bool> {
     }
   }
 
-  Future<void> deleteTodo(String id) async {
+  Future<void> updateTodo({
+    required String id,
+    required String title,
+  }) async {
     try {
-      state = true;
-      await ref.read(todoServiceProvider).deleteTodo(id);
+      await ref.read(todoServiceProvider).updateTodo(
+            id: id,
+            title: title,
+          );
       state = false;
     } catch (error) {
       debugPrint(error.toString());
@@ -40,7 +50,18 @@ class TodoController extends StateNotifier<bool> {
     }
   }
 
-  Stream<List<Todo>> getTodos({bool online = true}) {
-    return ref.read(todoServiceProvider).getTodos();
+  Future<void> deleteTodo({required String id}) async {
+    try {
+      state = true;
+      await ref.read(todoServiceProvider).deleteTodo(id: id);
+      state = false;
+    } catch (error) {
+      debugPrint(error.toString());
+      state = false;
+    }
+  }
+
+  Stream<List<Todo>> getTodos({required String? deviceId}) {
+    return ref.read(todoServiceProvider).getTodos(deviceId: deviceId);
   }
 }

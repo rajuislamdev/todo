@@ -79,14 +79,19 @@ class TodoAddDialog extends StatelessWidget {
                             )
                           : CustomButton(
                               buttonText: 'Save',
-                              onPressed: () {
+                              onPressed: () async {
                                 if (formKey.currentState!.validate()) {
-                                  ref
-                                      .read(todoControllerProvider.notifier)
-                                      .addTodo(title: titleController.text)
-                                      .then((value) {
-                                    titleController.clear();
-                                    context.nav.pop();
+                                  GlobalFunction.getDeviceId().then((value) {
+                                    ref
+                                        .read(todoControllerProvider.notifier)
+                                        .addTodo(
+                                          title: titleController.text,
+                                          deviceId: value!,
+                                        )
+                                        .then((value) {
+                                      titleController.clear();
+                                      context.nav.pop();
+                                    });
                                   });
                                 }
                               },

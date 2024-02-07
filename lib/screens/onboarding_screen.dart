@@ -47,12 +47,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             .copyWith(top: 40.h, bottom: 20.h),
         child: Column(
           children: [
-            // const Hero(
-            //   tag: 1,
-            //   child: AppLogo(
-            //     isAnimation: false,
-            //   ),
-            // ),
             Gap(30.h),
             Expanded(
               child: PageView.builder(
@@ -69,7 +63,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   return Column(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(160),
+                        borderRadius: BorderRadius.circular(10.r),
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         child: Image.asset(
                           onboardingItems[index]['image'],
